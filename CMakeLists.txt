@@ -38,8 +38,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(json)
 
 # Find system-installed libsodium
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(SODIUM REQUIRED libsodium)
+if(WIN32)
+  find_package(sodium REQUIRED)
+else()
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(SODIUM REQUIRED libsodium)
+endif()
 
 ###############################################################################
 
@@ -94,10 +98,10 @@ target_include_directories(${MAIN_EXECUTABLE_NAME} PUBLIC
 )
 target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE
     ext
-    ${SODIUM_INCLUDE_DIRS}
+    $<$<NOT:$<BOOL:${WIN32}>>:${SODIUM_INCLUDE_DIRS}>
 )
 
-target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE nlohmann_json::nlohmann_json ${SODIUM_LIBRARIES})
+target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE nlohmann_json::nlohmann_json $<$<BOOL:${WIN32}>:sodium::sodium> $<$<NOT:$<BOOL:${WIN32}>>:${SODIUM_LIBRARIES}>)
 
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${<SomeLib>_SOURCE_DIR}/include)
 # target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${<SomeLib>_BINARY_DIR}/lib)

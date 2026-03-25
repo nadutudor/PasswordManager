@@ -219,7 +219,7 @@ public:
         sodium_memzero(plain_master_key.data(), plain_master_key.size());
         plain_master_key.clear();
         hashed = hashed_output;
-        this->salt = salt;
+        salt = salt_param;
     }
 
     const std::vector<unsigned char> &getHash() const

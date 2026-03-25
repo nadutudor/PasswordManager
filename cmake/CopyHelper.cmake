@@ -11,8 +11,7 @@ function(copy_files)
             TARGET ${ARG_TARGET_NAME} POST_BUILD
             COMMENT "Copying ${file}..."
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            ${CMAKE_SOURCE_DIR}/${file} $<TARGET_FILE_DIR:${ARG_TARGET_NAME}>)
-            # ${CMAKE_CURRENT_BINARY_DIR})
+            ${CMAKE_SOURCE_DIR}/${file} ${CMAKE_CURRENT_BINARY_DIR})
     endforeach()
 
     # copy folders to build dir
@@ -21,8 +20,7 @@ function(copy_files)
             TARGET ${ARG_TARGET_NAME} POST_BUILD
             COMMENT "Copying directory ${dir}..."
             COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
-            ${CMAKE_SOURCE_DIR}/${dir} $<TARGET_FILE_DIR:${ARG_TARGET_NAME}>/${dir})
-            # ${CMAKE_CURRENT_BINARY_DIR}/${dir})
+            ${CMAKE_SOURCE_DIR}/${dir} ${CMAKE_CURRENT_BINARY_DIR}/${dir})
     endforeach()
 
     if(ARG_COPY_TO_DESTINATION)

@@ -470,7 +470,7 @@ void print_options_vault(const Vault &vault){
     //     }
     // }
 }
-// TODO: Rewrite this function
+
 void edit_options_vault(Vault &vault, const std::filesystem::path &path_to_vault){
     std::string name, category, folder, link, notes, username, password;
 

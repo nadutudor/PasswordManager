@@ -82,6 +82,7 @@ class Message
     }
 
 public:
+    Message() = default;
     Message(const std::vector<unsigned char> &message, const std::vector<unsigned char> &hashed)
     {
         Encryption(message, hashed);
@@ -204,9 +205,12 @@ public:
         // creating the hash
         std::vector<unsigned char> hashed_output(32);
 
-        crypto_pwhash(hashed_output.data(), hashed_output.size(), reinterpret_cast<const char *>(plain_master_key.data()), plain_master_key.size(), salt.data(),
+        int result = crypto_pwhash(hashed_output.data(), hashed_output.size(), reinterpret_cast<const char *>(plain_master_key.data()), plain_master_key.size(), salt.data(),
                       crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE, crypto_pwhash_ALG_ARGON2ID13);
-
+        if(result){
+            std::cerr<<"Failed to hash the master key \n";
+            std::exit(1);
+        }
         // zero the data in RAM, basically "erasing" the data
         sodium_memzero(plain_master_key.data(), plain_master_key.size());
         plain_master_key.clear();
@@ -364,7 +368,7 @@ public:
     Login() = default;
     Login(const std::string &item_name, const Category &category, const Folder &folder,
           const LoginCredentials &loginInfo, const std::string &link,
-          const std::string &notes) : item_name{item_name}, category{category}, loginInfo{loginInfo}, link{link}, notes{notes}, folder{folder} {}
+          const std::string &notes) : item_name{item_name}, category{category}, loginInfo{loginInfo}, link{link}, folder{folder}, notes{notes}{}
     friend std::ostream &operator<<(std::ostream &os, const Login &old_login)
     {
         os << old_login.item_name << " " << old_login.category << " " << old_login.loginInfo << " " << old_login.link << " \n"

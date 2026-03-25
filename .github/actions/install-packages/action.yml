@@ -28,8 +28,9 @@ runs:
 
     # Windows dependencies
     - name: Install Windows Dependencies (vcpkg)
-      shell: bash
+      shell: powershell
       if: runner.os == 'Windows'
       run: |
+        choco install pkgconfiglite -y
         vcpkg integrate install
         vcpkg install libsodium:x64-windows

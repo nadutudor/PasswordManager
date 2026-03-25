@@ -81,9 +81,22 @@ runs:
           -i ${GITHUB_WORKSPACE}/artifacts \
           -s ${GITHUB_WORKSPACE}
 
+    - name: Configure CMake (macOS)
+      shell: bash
+      if: runner.os == 'macOS'
+      run: |
+        export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig:${PKG_CONFIG_PATH}"
+        export CMAKE_GENERATOR=${{ matrix.cmake_generator }}
+        bash ./scripts/cmake.sh configure \
+          -b ${{ env.BUILD_DIR }} \
+          -c ${{ env.BUILD_TYPE }} \
+          -e "-DPROJECT_WARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors }} -DGITHUB_ACTIONS=${GITHUB_ACTIONS} ${{ inputs.custom_flags }}" \
+          -i ${GITHUB_WORKSPACE}/artifacts \
+          -s ${GITHUB_WORKSPACE}
+
     - name: Configure CMake
       shell: bash
-      if: ${{ !(runner.os == 'Windows' && matrix.cxx == 'g++') }}
+      if: ${{ !(runner.os == 'Windows' && matrix.cxx == 'g++') && runner.os != 'macOS' }}
       run: |
         export CMAKE_GENERATOR=${{ matrix.cmake_generator }}
         bash ./scripts/cmake.sh configure \

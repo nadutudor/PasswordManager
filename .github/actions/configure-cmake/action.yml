@@ -74,10 +74,11 @@ runs:
         # because GH Actions does not properly prepend to $PATH and still chooses VM gcc
         # CMake generator not passed as option to script since it might not be defined
         export CMAKE_GENERATOR=${{ matrix.cmake_generator }}
+        # Use vcpkg toolchain so CMake can find vcpkg-provided packages (libsodium)
         bash ./scripts/cmake.sh configure \
           -b ${{ env.BUILD_DIR }} \
           -c ${{ env.BUILD_TYPE }} \
-          -e "-DPROJECT_WARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors }} -DGITHUB_ACTIONS=${GITHUB_ACTIONS} ${{ inputs.custom_flags }}" \
+          -e "-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-mingw -DPROJECT_WARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors }} -DGITHUB_ACTIONS=${GITHUB_ACTIONS} ${{ inputs.custom_flags }}" \
           -i ${GITHUB_WORKSPACE}/artifacts \
           -s ${GITHUB_WORKSPACE}
 

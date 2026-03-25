@@ -368,7 +368,7 @@ public:
     Login() = default;
     Login(const std::string &item_name, const Category &category, const Folder &folder,
           const LoginCredentials &loginInfo, const std::string &link,
-          const std::string &notes) : item_name{item_name}, category{category}, loginInfo{loginInfo}, link{link}, folder{folder}, notes{notes}{}
+          const std::string &notes) : item_name{item_name}, category{category}, folder{folder}, loginInfo{loginInfo}, link{link}, notes{notes}{}
     friend std::ostream &operator<<(std::ostream &os, const Login &old_login)
     {
         os << old_login.item_name << " " << old_login.category << " " << old_login.loginInfo << " " << old_login.link << " \n"

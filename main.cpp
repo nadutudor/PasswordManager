@@ -478,13 +478,12 @@ void create_vault()
     std::cout << "  Enter vault name:                             \n";
     std::cin >> vaultName;
     std::cout << "  Enter master key:                             \n";
-    std::string *plain = new std::string;
-    std::cin >> *plain;
-    for (const char &t : *plain)
+    std::string plain;
+    std::cin >> plain;
+    for (const char &t : plain)
     {
         plain_master_key.push_back(t);
     }
-    delete plain;
     Vault newVault(vaultName, plain_master_key);
 }
 
@@ -666,13 +665,12 @@ void find_vault(const std::unordered_map<std::filesystem::path, std::array<std::
 {
     std::vector<unsigned char> plain_master_key;
     std::cout << "  Enter master key:                             \n";
-    std::string *plain = new std::string;
-    std::cin >> *plain;
-    for (const char &t : *plain)
+    std::string plain;
+    std::cin >> plain;
+    for (const char &t : plain)
     {
         plain_master_key.push_back(t);
     }
-    delete plain;
 
     for (const auto &path : paths)
     {
@@ -700,13 +698,12 @@ void known_vault(const std::unordered_map<std::filesystem::path, std::array<std:
 
     std::vector<unsigned char> plain_master_key;
     std::cout << "  Enter master key:                             \n";
-    std::string *plain = new std::string;
-    std::cin >> *plain;
-    for (const char &t : *plain)
+    std::string plain;
+    std::cin >> plain;
+    for (const char &t : plain)
     {
         plain_master_key.push_back(t);
     }
-    delete plain;
 
     // Create a new string for the exact file path to avoid modifying the base path
     std::string full_path = path_of_vaults + file_name + ".json";

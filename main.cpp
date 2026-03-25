@@ -1,6 +1,10 @@
 #include <iostream>
 #include <fstream>
-#include <bits/stdc++.h>
+#include <string>
+#include <vector>
+#include <array>
+#include <unordered_map>
+#include <filesystem>
 #include <nlohmann/json.hpp>
 #include <sodium.h>
 

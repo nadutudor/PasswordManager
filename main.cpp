@@ -198,7 +198,7 @@ public:
     }
 
     // for hashing the master key using an already existing salt
-    void HashUsingExistingSalt(std::vector<unsigned char> &plain_master_key, const std::vector<unsigned char> &salt_param)
+    [[maybe_unused]] void HashUsingExistingSalt(std::vector<unsigned char> &plain_master_key, const std::vector<unsigned char> &salt_param)
     {
         if (sodium_init() < 0)
         {
@@ -337,10 +337,7 @@ class Folder
 public:
     Folder() = default;
     explicit Folder(const std::string &name) : name{name} {}
-    explicit Folder(const Folder &old_category)
-    {
-        name = old_category.name;
-    }
+    explicit Folder(const Folder &old_category) : name{old_category.name} {}
     void operator=(const Folder &old_category)
     {
         name = old_category.name;
@@ -676,11 +673,10 @@ void find_vault(const std::unordered_map<std::filesystem::path, std::array<std::
         plain_master_key.push_back(t);
     }
     delete plain;
-    std::vector<unsigned char> hashed_master_key;
 
     for (const auto &path : paths)
     {
-        hashed_master_key = Enc(plain_master_key, path.second[0]);
+        std::vector<unsigned char> hashed_master_key = Enc(plain_master_key, path.second[0]);
         if (validate_master_key(hashed_master_key, path.second[1], path.second[2]))
         {
             std::cout << "  FILE FOUND:                             \n";
@@ -696,7 +692,7 @@ void find_vault(const std::unordered_map<std::filesystem::path, std::array<std::
     std::cout << "  FILE NOT FOUND                             \n";
 }
 
-void known_vault(const std::unordered_map<std::filesystem::path, std::array<std::vector<unsigned char>, 3>> &paths, std::string path_of_vaults)
+void known_vault(const std::unordered_map<std::filesystem::path, std::array<std::vector<unsigned char>, 3>> &paths, const std::string &path_of_vaults)
 {
     std::string file_name;
     std::cout << "  Enter vault name:                             \n";

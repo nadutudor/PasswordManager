@@ -96,9 +96,22 @@ runs:
           -i ${GITHUB_WORKSPACE}/artifacts \
           -s ${GITHUB_WORKSPACE}
 
+    - name: Configure CMake (Windows MSVC)
+      shell: bash
+      if: runner.os == 'Windows' && matrix.cxx == 'cl'
+      run: |
+        export PKG_CONFIG_PATH="C:/vcpkg/installed/x64-windows/lib/pkgconfig:${PKG_CONFIG_PATH}"
+        export CMAKE_GENERATOR=${{ matrix.cmake_generator }}
+        bash ./scripts/cmake.sh configure \
+          -b ${{ env.BUILD_DIR }} \
+          -c ${{ env.BUILD_TYPE }} \
+          -e "-DPROJECT_WARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors }} -DGITHUB_ACTIONS=${GITHUB_ACTIONS} ${{ inputs.custom_flags }}" \
+          -i ${GITHUB_WORKSPACE}/artifacts \
+          -s ${GITHUB_WORKSPACE}
+
     - name: Configure CMake
       shell: bash
-      if: ${{ !(runner.os == 'Windows' && matrix.cxx == 'g++') && runner.os != 'macOS' }}
+      if: ${{ !(runner.os == 'Windows' && matrix.cxx == 'g++') && runner.os != 'macOS' && !(runner.os == 'Windows' && matrix.cxx == 'cl') }}
       run: |
         export CMAKE_GENERATOR=${{ matrix.cmake_generator }}
         bash ./scripts/cmake.sh configure \

@@ -9,6 +9,8 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install --no-install-recommends clang-tidy-${{ env.CLANG_VER }} libc++-${{ env.CLANG_VER }}-dev libc++abi-${{ env.CLANG_VER }}-dev ninja-build
+        # Install libsodium and pkg-config so CMake's pkg_check_modules can find libsodium
+        sudo apt-get install --no-install-recommends libsodium-dev pkg-config
 
     - name: Configure CMake
       uses: ./.github/actions/configure-cmake

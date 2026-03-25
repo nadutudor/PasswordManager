@@ -32,5 +32,11 @@ runs:
       if: runner.os == 'Windows'
       run: |
         choco install pkgconfiglite -y
-        vcpkg integrate install
-        vcpkg install libsodium:x64-windows
+        # Ensure vcpkg is present and bootstrapped at C:\vcpkg
+        if (!(Test-Path 'C:\vcpkg')) {
+          git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+          & C:\vcpkg\bootstrap-vcpkg.bat
+        }
+        # Integrate and install libsodium for x64-windows triplet
+        & C:\vcpkg\vcpkg.exe integrate install
+        & C:\vcpkg\vcpkg.exe install libsodium:x64-windows

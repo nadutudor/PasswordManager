@@ -41,4 +41,4 @@ runs:
         & C:\vcpkg\vcpkg.exe integrate install
         & C:\vcpkg\vcpkg.exe install libsodium:x64-windows
         # Install libsodium for MinGW triplet so MinGW jobs can find it
-        & C:\vcpkg\vcpkg.exe install libsodium:x64-mingw
+        & C:\vcpkg\vcpkg.exe install libsodium:x64-mingw-dynamic

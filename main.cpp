@@ -87,7 +87,7 @@ public:
     {
         Encryption(message, hashed);
     }
-    Message(const std::string &item_value)
+    explicit Message(const std::string &item_value)
     {
         std::vector<unsigned char> binary_item_value = Base642Bin(item_value);
         // strict 24 bytes of nonce + 16 bytes MAC tag, considering that the message is 0 - worst case. Size at least 40 is a minimum requirement
@@ -156,7 +156,7 @@ class MasterKey
 public:
     MasterKey() = default;
     // for newly created masterkey
-    MasterKey(std::vector<unsigned char> &plain_master_key)
+    explicit MasterKey(std::vector<unsigned char> &plain_master_key)
     {
         if (sodium_init() < 0)
         {
@@ -165,13 +165,13 @@ public:
         }
 
         // creating the salt
-        std::vector<unsigned char> salt(crypto_pwhash_SALTBYTES);
-        randombytes_buf(salt.data(), salt.size());
+        std::vector<unsigned char> localSalt(crypto_pwhash_SALTBYTES);
+        randombytes_buf(localSalt.data(), localSalt.size());
 
         // creating the hash
         std::vector<unsigned char> hashed_output(32);
 
-        int result = crypto_pwhash(hashed_output.data(), hashed_output.size(), reinterpret_cast<const char *>(plain_master_key.data()), plain_master_key.size(), salt.data(),
+        int result = crypto_pwhash(hashed_output.data(), hashed_output.size(), reinterpret_cast<const char *>(plain_master_key.data()), plain_master_key.size(), localSalt.data(),
                       crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE, crypto_pwhash_ALG_ARGON2ID13);
 
         if(result){
@@ -183,11 +183,11 @@ public:
         sodium_memzero(plain_master_key.data(), plain_master_key.size());
         plain_master_key.clear();
         hashed = hashed_output;
-        this->salt = salt;
+        salt = localSalt;
     }
 
     // MasterKey initialization constructor
-    MasterKey(std::vector<unsigned char> &hashed, const std::vector<unsigned char> &salt)
+    MasterKey(const std::vector<unsigned char> &hashed, const std::vector<unsigned char> &salt)
     {
         this->hashed = hashed;
         this->salt = salt;
@@ -233,7 +233,7 @@ class Files
     std::unordered_map<std::filesystem::path, std::array<std::vector<unsigned char>, 3>> paths;
 
 public:
-    Files(const std::filesystem::path &parent_directory)
+    explicit Files(const std::filesystem::path &parent_directory)
     {
         if (!std::filesystem::exists(parent_directory))
         {
@@ -286,11 +286,8 @@ class Category
 
 public:
     Category() = default;
-    Category(const std::string &name) : name{name} {}
-    Category(const Category &old_category)
-    {
-        name = old_category.name;
-    }
+    explicit Category(const std::string &name) : name{name} {}
+    explicit Category(const Category &old_category) : name{old_category.name}{}
     void operator=(const Category &old_category)
     {
         name = old_category.name;
@@ -335,8 +332,8 @@ class Folder
 
 public:
     Folder() = default;
-    Folder(const std::string &name) : name{name} {}
-    Folder(const Folder &old_category)
+    explicit Folder(const std::string &name) : name{name} {}
+    explicit Folder(const Folder &old_category)
     {
         name = old_category.name;
     }

@@ -10,7 +10,7 @@ runs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install ninja-build
+        sudo apt-get install ninja-build libsodium-dev pkg-config
 
     - name: Install valgrind
       shell: bash
@@ -18,3 +18,18 @@ runs:
       run: |
         # sudo apt-get update
         sudo apt-get install --no-install-recommends valgrind
+
+    # macOS dependencies
+    - name: Install macOS Dependencies
+      shell: bash
+      if: runner.os == 'macOS'
+      run: |
+        brew install libsodium pkg-config
+
+    # Windows dependencies
+    - name: Install Windows Dependencies (vcpkg)
+      shell: bash
+      if: runner.os == 'Windows'
+      run: |
+        vcpkg integrate install
+        vcpkg install libsodium:x64-windows

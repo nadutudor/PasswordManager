@@ -198,7 +198,7 @@ public:
     }
 
     // for hashing the master key using an already existing salt
-    void HashUsingExistingSalt(std::vector<unsigned char> &plain_master_key, const std::vector<unsigned char> &salt)
+    void HashUsingExistingSalt(std::vector<unsigned char> &plain_master_key, const std::vector<unsigned char> &salt_param)
     {
         if (sodium_init() < 0)
         {
@@ -209,7 +209,8 @@ public:
         // creating the hash
         std::vector<unsigned char> hashed_output(32);
 
-        int result = crypto_pwhash(hashed_output.data(), hashed_output.size(), reinterpret_cast<const char *>(plain_master_key.data()), plain_master_key.size(), salt.data(),
+        int result = crypto_pwhash(hashed_output.data(), hashed_output.size(), reinterpret_cast<const char *>(plain_master_key.data()), plain_master_key.size(), salt_param.data(),
+                      crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE, crypto_pwhash_ALG_ARGON2ID13);
                       crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE, crypto_pwhash_ALG_ARGON2ID13);
         if(result){
             std::cerr<<"Failed to hash the master key \n";
@@ -452,7 +453,7 @@ public:
         dummy_container.insert(dummy_container.end(), dummy_message.begin(), dummy_message.end());
         newVault["dummy"] = Bin2Base64(dummy_container);
 
-        std::string path_of_vaults = std::filesystem::current_path();
+        std::string path_of_vaults = std::filesystem::current_path().string();
         // Path can be changed at any time
         path_of_vaults.append("/assets/vaults/");
         // Create the .json file
@@ -741,7 +742,7 @@ void enter_vault()
 {
     int choice;
     bool running = true;
-    std::string path_of_vaults = std::filesystem::current_path();
+    std::string path_of_vaults = std::filesystem::current_path().string();
     // Path can be changed at any time
     path_of_vaults.append("/assets/vaults/");
     Files file(path_of_vaults);

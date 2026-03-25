@@ -37,12 +37,33 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(json)
 
-# Find system-installed libsodium
+# Find libsodium in a cross-platform way:
+# - On Windows with vcpkg, prefer the CMake config package provided by vcpkg (libsodium or sodium)
+# - On Unix, use pkg-config (libsodium)
+set(SODIUM_FOUND FALSE)
 if(WIN32)
-  find_package(sodium REQUIRED)
+    # Try the vcpkg / CMake config package names
+    find_package(libsodium CONFIG QUIET)
+    if(TARGET libsodium::libsodium)
+        set(SODIUM_TARGET libsodium::libsodium)
+        set(SODIUM_FOUND TRUE)
+    else()
+        find_package(sodium CONFIG QUIET)
+        if(TARGET sodium::sodium)
+            set(SODIUM_TARGET sodium::sodium)
+            set(SODIUM_FOUND TRUE)
+        endif()
+    endif()
 else()
-  find_package(PkgConfig REQUIRED)
-  pkg_check_modules(SODIUM REQUIRED libsodium)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(SODIUM REQUIRED libsodium)
+    if(DEFINED SODIUM_LIBRARIES)
+        set(SODIUM_FOUND TRUE)
+    endif()
+endif()
+
+if(NOT SODIUM_FOUND)
+    message(FATAL_ERROR "libsodium not found. On Windows CI ensure vcpkg installed libsodium and CMake is invoked with -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake")
 endif()
 
 ###############################################################################
@@ -97,11 +118,19 @@ target_include_directories(${MAIN_EXECUTABLE_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
 )
 target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE
-    ext
-    $<$<NOT:$<BOOL:${WIN32}>>:${SODIUM_INCLUDE_DIRS}>
+        ext
 )
 
-target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE nlohmann_json::nlohmann_json $<$<BOOL:${WIN32}>:sodium::sodium> $<$<NOT:$<BOOL:${WIN32}>>:${SODIUM_LIBRARIES}>)
+# Link libsodium: prefer an imported target (from vcpkg/config) if available,
+# otherwise use the pkg-config variables populated on Unix (SODIUM_LIBRARIES).
+if(DEFINED SODIUM_TARGET)
+    target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE nlohmann_json::nlohmann_json ${SODIUM_TARGET})
+else()
+    if(DEFINED SODIUM_INCLUDE_DIRS)
+        target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${SODIUM_INCLUDE_DIRS})
+    endif()
+    target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE nlohmann_json::nlohmann_json ${SODIUM_LIBRARIES})
+endif()
 
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${<SomeLib>_SOURCE_DIR}/include)
 # target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${<SomeLib>_BINARY_DIR}/lib)

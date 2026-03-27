@@ -18,6 +18,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(cmake/Options.cmake)
 include(cmake/CompilerFlags.cmake)
 include(cmake/CopyHelper.cmake)
+include(include/utils.hpp)
 # Dependencies
 include(FetchContent)
 

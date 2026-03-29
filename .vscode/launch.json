@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug temp.cpp",
+            "name": "Debug main.cpp",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/temp",
+            "program": "${workspaceFolder}/main.out",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

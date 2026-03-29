@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <vector>
 #include <nlohmann/json.hpp>
+#include "utils.hpp"
 
 using json = nlohmann::json;
 

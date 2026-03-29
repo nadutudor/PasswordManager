@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
+
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing executable name in this file
 # for now, the project name is used as the executable name
 set(MAIN_PROJECT_NAME "oop")
@@ -134,6 +135,20 @@ else()
     endif()
     target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE nlohmann_json::nlohmann_json ${SODIUM_LIBRARIES})
 endif()
+
+# Optional: find and link raylib and RmlUi when available (vcpkg or system installs)
+find_package(raylib CONFIG QUIET)
+if(TARGET raylib::raylib)
+    target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE raylib::raylib)
+    message(STATUS "Found raylib and linked to ${MAIN_EXECUTABLE_NAME}")
+endif()
+
+find_package(RmlUi CONFIG QUIET)
+if(TARGET RmlUi::RmlUi)
+    target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE RmlUi::RmlUi)
+    message(STATUS "Found RmlUi and linked to ${MAIN_EXECUTABLE_NAME}")
+endif()
+
 
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${<SomeLib>_SOURCE_DIR}/include)
 # target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${<SomeLib>_BINARY_DIR}/lib)

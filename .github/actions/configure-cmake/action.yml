@@ -91,10 +91,15 @@ runs:
         export LDFLAGS="-L/opt/homebrew/lib"
         export CPPFLAGS="-I/opt/homebrew/include"
         export CMAKE_GENERATOR=${{ matrix.cmake_generator }}
+        # If vcpkg was bootstrapped in previous step, use its toolchain for reproducible deps
+        TOOLCHAIN_ARGS=""
+        if [ -d "${GITHUB_WORKSPACE}/vcpkg" ]; then
+          TOOLCHAIN_ARGS="-DCMAKE_TOOLCHAIN_FILE=${GITHUB_WORKSPACE}/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-osx"
+        fi
         bash ./scripts/cmake.sh configure \
           -b ${{ env.BUILD_DIR }} \
           -c ${{ env.BUILD_TYPE }} \
-          -e "-DPROJECT_WARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors }} -DGITHUB_ACTIONS=${GITHUB_ACTIONS} ${{ inputs.custom_flags }}" \
+          -e "${TOOLCHAIN_ARGS} -DPROJECT_WARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors }} -DGITHUB_ACTIONS=${GITHUB_ACTIONS} ${{ inputs.custom_flags }}" \
           -i ${GITHUB_WORKSPACE}/artifacts \
           -s ${GITHUB_WORKSPACE}
 
@@ -115,10 +120,15 @@ runs:
       if: ${{ !(runner.os == 'Windows' && matrix.cxx == 'g++') && runner.os != 'macOS' && !(runner.os == 'Windows' && matrix.cxx == 'cl') }}
       run: |
         export CMAKE_GENERATOR=${{ matrix.cmake_generator }}
+        # If vcpkg was bootstrapped in previous step, use its toolchain for reproducible deps
+        TOOLCHAIN_ARGS=""
+        if [ -d "${GITHUB_WORKSPACE}/vcpkg" ]; then
+          TOOLCHAIN_ARGS="-DCMAKE_TOOLCHAIN_FILE=${GITHUB_WORKSPACE}/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux"
+        fi
         bash ./scripts/cmake.sh configure \
           -b ${{ env.BUILD_DIR }} \
           -c ${{ env.BUILD_TYPE }} \
-          -e "-DPROJECT_WARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors }} -DGITHUB_ACTIONS=${GITHUB_ACTIONS} ${{ inputs.custom_flags }}" \
+          -e "${TOOLCHAIN_ARGS} -DPROJECT_WARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors }} -DGITHUB_ACTIONS=${GITHUB_ACTIONS} ${{ inputs.custom_flags }}" \
           -i ${GITHUB_WORKSPACE}/artifacts \
           -s ${GITHUB_WORKSPACE}
 

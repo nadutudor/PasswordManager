@@ -11,6 +11,13 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install ninja-build libsodium-dev pkg-config
+        # Bootstrap vcpkg in the workspace and install common libraries
+        if [ ! -d "${GITHUB_WORKSPACE}/vcpkg" ]; then
+          git clone https://github.com/microsoft/vcpkg.git "${GITHUB_WORKSPACE}/vcpkg"
+          bash "${GITHUB_WORKSPACE}/vcpkg/bootstrap-vcpkg.sh"
+        fi
+        # Install packages for x64-linux triplet (best-effort)
+        "${GITHUB_WORKSPACE}/vcpkg/vcpkg" install libsodium:x64-linux raylib:x64-linux rmlui:x64-linux || true
 
     - name: Install valgrind
       shell: bash
@@ -25,6 +32,13 @@ runs:
       if: runner.os == 'macOS'
       run: |
         brew install libsodium pkg-config
+        # Bootstrap vcpkg in the workspace and install common libraries
+        if [ ! -d "${GITHUB_WORKSPACE}/vcpkg" ]; then
+          git clone https://github.com/microsoft/vcpkg.git "${GITHUB_WORKSPACE}/vcpkg"
+          bash "${GITHUB_WORKSPACE}/vcpkg/bootstrap-vcpkg.sh"
+        fi
+        # Install packages for x64-osx triplet (best-effort)
+        "${GITHUB_WORKSPACE}/vcpkg/vcpkg" install libsodium:x64-osx raylib:x64-osx rmlui:x64-osx || true
 
     # Windows dependencies
     - name: Install Windows Dependencies (vcpkg)

@@ -7,6 +7,8 @@
 #include <filesystem>
 #include <nlohmann/json.hpp>
 #include <sodium.h>
+#include <raylib.h>
+#include <RmlUi/Core.h>
 #include "include/utils.hpp"
 #include "include/file_manager.hpp"
 #include "include/vault_components.hpp"
@@ -47,28 +49,8 @@ void print_options_vault(const Vault &vault)
         std::cout << "\t\t" << "Username: " << item.getLoginInfo().getUsername() << " \n";
         std::cout << "\t\t" << "Password: " << item.getLoginInfo().getPassword().Decryption(vault.getMasterkey().getHash()) << " \n\n\n\n";
     }
-
-    // int choice;
-    // bool running = true;
-    // while(running){
-    //     std::cout<<"      Options:                                 \n";
-    //     std::cout<<"  [1] Print all data                             \n";
-    //     std::cout<<"  [2] Search item name                              \n";
-    //     std::cout<<"      [3] Return                                 \n";
-    //     std::cin>>choice;
-    //     switch(choice){
-    //         case 1:
-    //             print_options_vault(vault);
-    //             break;
-    //         case 2:
-    //             edit_options_vault(vault);
-    //             break;
-    //         case 3:
-    //             running = false;
-    //             break;
-    //     }
-    // }
 }
+
 // TODO: Rewrite this function
 void edit_options_vault(Vault &vault, const std::filesystem::path &path_to_vault)
 {

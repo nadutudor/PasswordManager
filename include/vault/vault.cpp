@@ -88,12 +88,14 @@ Vault::Vault()
     path_to_vault = path_of_vaults / (vaultName + ".json");
 }
 
-const std::vector<Login>& Vault::getItems() const
+// cppcheck-suppress unusedFunction
+[[nodiscard]] const std::vector<Login>& Vault::getItems() const
 {
     return items;
 }
 
-const MasterKey& Vault::getMasterkey() const
+// cppcheck-suppress unusedFunction
+[[nodiscard]] const MasterKey& Vault::getMasterkey() const
 {
     return masterkey;
 }

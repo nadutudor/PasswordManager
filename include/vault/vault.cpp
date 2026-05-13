@@ -19,7 +19,7 @@ Vault::Vault(const std::filesystem::path &existing_vault, const MasterKey &maste
         try{
             fin >> vault;
         }
-        catch (const json::parse_error &err){
+        catch (const json::parse_error &){
             throw VaultInvalidJSON(existing_vault.string());
         }
     }

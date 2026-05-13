@@ -4,6 +4,7 @@ mkdir -p cppcheck-scan-dir
 
 cppcheck --enable=all \
     --inline-suppr \
+    --std=c++23 \
     --project="${BUILD_DIR:-build}"/compile_commands.json \
     -i"${FETCHCONTENT_BASE_DIR:-build/_deps}" --suppress="*:${FETCHCONTENT_BASE_DIR:-build/_deps}/*" \
     -i"${BUILD_DIR:-build}" --suppress="*:${BUILD_DIR:-build}/*" \

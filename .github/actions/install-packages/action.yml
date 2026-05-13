@@ -10,7 +10,7 @@ runs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install ninja-build libsodium-dev pkg-config
+        sudo apt-get install ninja-build libsodium-dev pkg-config libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev
         # Bootstrap vcpkg in the workspace and install common libraries
         if [ ! -d "${GITHUB_WORKSPACE}/vcpkg" ]; then
           git clone https://github.com/microsoft/vcpkg.git "${GITHUB_WORKSPACE}/vcpkg"

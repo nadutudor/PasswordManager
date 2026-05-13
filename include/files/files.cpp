@@ -4,16 +4,26 @@
 
 Files::Files(const std::filesystem::path &parent_directory)
 {
-    if (!std::filesystem::exists(parent_directory))
-    { 
-        std::cerr << parent_directory << " does not exist.";
+    try{
+        if (!std::filesystem::exists(parent_directory))
+        { 
+            throw DirectoryNotExist(parent_directory.string());
+        }
+    }
+    catch(const DirectoryNotExist &e){
+        std::cerr<<e.what();
         return;
     }
-    if (!std::filesystem::is_directory(parent_directory))
-    {
-        std::cerr << parent_directory << " is not a directory.";
+
+    try{
+        if (!std::filesystem::is_directory(parent_directory))
+        throw NotTypeDirectory(parent_directory.string());
+    }
+    catch(const NotTypeDirectory &e){
+        std::cerr<<e.what();
         return;
     }
+
     for (auto const &file : std::filesystem::directory_iterator{parent_directory})
     {
         if (file.path().extension() != ".json")
@@ -21,21 +31,29 @@ Files::Files(const std::filesystem::path &parent_directory)
             continue;
         }
         std::ifstream fin(file.path());
-        if (!fin.is_open())
-        {
-            std::cerr << "Failed to open vault file: " << file.path() << '\n';
+        try{
+            if (!fin.is_open())
+            {
+                throw FailedOpenVault(file.path().string());
+            }
+        }
+        catch(const FailedOpenVault &e){
+            std::cerr<<e.what();
             continue;
         }
 
         json vault;
-        try
-        {
-            fin >> vault;
+        try {
+            try{
+                fin >> vault;
+            }
+            catch (const json::parse_error &){
+                throw VaultInvalidJSON(file.path().string());
+            }
         }
-        catch (const json::parse_error &err)
-        {
-            std::cerr << "Invalid JSON in vault file: " << file.path() << " - " << err.what() << '\n';
-            continue;
+        catch(const VaultInvalidJSON &e) {
+            std::cerr<<e.what();
+            return;
         }
 
         if (!vault.contains("salt") || !vault.contains("dummy"))

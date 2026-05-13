@@ -2,7 +2,7 @@
 
 VaultInteractionState::VaultInteractionState(const std::filesystem::path &path_to_vault, const MasterKey &masterkey) : path_to_vault(path_to_vault), vault(path_to_vault, masterkey) {}
 
-std::unique_ptr<MenuState> VaultInteractionState::handleInput() {
+std::unique_ptr<MenuState> VaultInteractionState::doHandleInput() {
     int choice;
     std::cout << "      Options:                                 \n";
     std::cout << "  [1] Print                             \n";
@@ -23,5 +23,9 @@ std::unique_ptr<MenuState> VaultInteractionState::handleInput() {
         return std::make_unique<VaultSelectionState>();
     }
     return nullptr;
+}
+
+std::unique_ptr<MenuState> VaultInteractionState::clone() const {
+    return std::make_unique<VaultInteractionState>(*this);
 }
 

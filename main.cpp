@@ -22,6 +22,7 @@
 #include "include/menustate/menustate.hpp"
 #include "include/vaultinteractionstate/vaultinteractionstate.hpp"
 #include "include/vaultselectionstate/vaultselectionstate.hpp"
+#include "include/statemanager/statemanager.hpp"
 
 // void create_vault()
 // {
@@ -299,24 +300,13 @@
 //     }
 // }
 
+
+
 int main()
 {
-    std::unique_ptr<MenuState> currentState = std::make_unique<MainMenuState>();
-    bool running = true;
-
-    while(running && currentState != nullptr){
-        // making the transition to the next state (can be the same as currentstate)
-        std::unique_ptr<MenuState> nextState = currentState->handleInput();
-
-        if(nextState != nullptr && dynamic_cast<ExitState*>(nextState.get()) == nullptr){
-
-            /* since pointers are unique_ptr, there can't be two pointing at the same object, so object of currentState is deleted, currenState
-            points to object in nextState and nextState becomes nullptr*/
-            currentState = std::move(nextState);
-        }
-        else if(dynamic_cast<ExitState*>(nextState.get()) != nullptr)
-            running = false;
-    }
+    StateManager app(std::make_unique<MainMenuState>());
+    app.run();
+    
 
     return 0;
 }

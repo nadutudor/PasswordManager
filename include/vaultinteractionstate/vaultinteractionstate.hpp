@@ -12,5 +12,6 @@ class VaultInteractionState : public MenuState{
 public:
     VaultInteractionState(const std::filesystem::path &path_to_vault, const MasterKey &masterkey);
 
-    std::unique_ptr<MenuState> handleInput() override;
+    std::unique_ptr<MenuState> doHandleInput() override;
+    std::unique_ptr<MenuState> clone() const override;
 };

@@ -4,5 +4,6 @@
 
 class ExitState : public MenuState {
     public:
-    std::unique_ptr<MenuState> handleInput() override;
+    std::unique_ptr<MenuState> doHandleInput() override;
+    std::unique_ptr<MenuState> clone() const override;
 };

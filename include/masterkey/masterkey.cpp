@@ -4,11 +4,17 @@ MasterKey::MasterKey() = default;
 
 MasterKey::MasterKey(std::vector<unsigned char> &plain_master_key)
 {
-    if (sodium_init() < 0)
-    {
-        std::cerr << "Failed to initialize libsodium \n";
+    try{
+        if (sodium_init() < 0)
+        {
+            throw SodiumInitFailed();
+        }
+    }
+    catch(const SodiumInitFailed &e){
+        std::cerr<<e.what();
         return;
     }
+
 
     // creating the salt
     std::vector<unsigned char> localSalt(crypto_pwhash_SALTBYTES);
@@ -19,11 +25,15 @@ MasterKey::MasterKey(std::vector<unsigned char> &plain_master_key)
 
     int result = crypto_pwhash(hashed_output.data(), hashed_output.size(), reinterpret_cast<const char *>(plain_master_key.data()), plain_master_key.size(), localSalt.data(),
                                 crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE, crypto_pwhash_ALG_ARGON2ID13);
-
-    if (result)
-    {
-        std::cerr << "Failed to hash the master key \n";
-        std::exit(1);
+    try{
+        if (result)
+        {
+            throw FailHashMaster();
+        }
+    }
+    catch(const FailHashMaster &e){
+        std::cerr<<e.what();
+        return;
     }
 
     // zero the data in RAM, basically "erasing" the data
@@ -43,9 +53,14 @@ MasterKey::MasterKey(const std::vector<unsigned char> &hashed, const std::vector
 // for hashing the master key using an already existing salt
 [[maybe_unused]] void MasterKey::HashUsingExistingSalt(std::vector<unsigned char> &plain_master_key, const std::vector<unsigned char> &salt_param)
 {
-    if (sodium_init() < 0)
-    {
-        std::cerr << "Failed to initialize libsodium \n";
+    try{
+        if (sodium_init() < 0)
+        {
+            throw SodiumInitFailed();
+        }
+    }
+    catch(const SodiumInitFailed &e){
+        std::cerr<<e.what();
         return;
     }
 
@@ -54,11 +69,17 @@ MasterKey::MasterKey(const std::vector<unsigned char> &hashed, const std::vector
 
     int result = crypto_pwhash(hashed_output.data(), hashed_output.size(), reinterpret_cast<const char *>(plain_master_key.data()), plain_master_key.size(), salt_param.data(),
                                 crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE, crypto_pwhash_ALG_ARGON2ID13);
-    if (result)
-    {
-        std::cerr << "Failed to hash the master key \n";
-        std::exit(1);
+    try{
+        if (result)
+        {
+            throw FailHashMaster();
+        }
     }
+    catch(const FailHashMaster &e){
+        std::cerr<<e.what();
+        return;
+    }
+    
     // zero the data in RAM, basically "erasing" the data
     sodium_memzero(plain_master_key.data(), plain_master_key.size());
     plain_master_key.clear();

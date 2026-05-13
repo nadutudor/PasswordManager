@@ -11,6 +11,9 @@
 #include "../folder/folder.hpp"
 #include "../logincredentials/logincredentials.hpp"
 #include "../message/message.hpp"
+#include "../exceptions/failed_open_vault/failed_open_vault.hpp"
+#include "../exceptions/failed_open_vault_edit/failed_open_vault_edit.hpp"
+#include "../exceptions/vault_invalid_json/vault_invalid_json.hpp"
 
 using json = nlohmann::json;
 

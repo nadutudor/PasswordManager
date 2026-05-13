@@ -6,19 +6,25 @@ Vault::Vault(const std::filesystem::path &existing_vault, const MasterKey &maste
 {
     json vault;
     std::ifstream fin(existing_vault);
-    if (!fin.is_open())
-    {
-        std::cerr << "Failed to open vault file: " << existing_vault << '\n';
+    try {
+        if (!fin.is_open())
+            throw FailedOpenVault();
+    }
+    catch(const FailedOpenVault &e){
+        std::cerr<<e.what();
         return;
     }
 
-    try
-    {
-        fin >> vault;
+    try {
+        try{
+            fin >> vault;
+        }
+        catch (const json::parse_error &err){
+            throw VaultInvalidJSON(existing_vault.string());
+        }
     }
-    catch (const json::parse_error &err)
-    {
-        std::cerr << "Invalid JSON in vault file: " << existing_vault << " - " << err.what() << '\n';
+    catch(const VaultInvalidJSON &e) {
+        std::cerr<<e.what();
         return;
     }
 
@@ -148,14 +154,16 @@ void Vault::edit_options_vault()
     // Read the existing vault file from disk
     std::ifstream fin(path_to_vault);
     json vault_json;
-    if (fin.is_open())
-    {
-        fin >> vault_json;
-        fin.close();
+    try {
+        if(fin.is_open()){
+            fin >> vault_json;
+            fin.close();
+        }
+        else
+            throw FailedOpenVaultEdit();
     }
-    else
-    {
-        std::cerr << "Failed to open vault file for editing.\n";
+    catch(const FailedOpenVaultEdit &e) {
+        std::cerr<<e.what();
         return;
     }
 

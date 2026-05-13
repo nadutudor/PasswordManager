@@ -103,7 +103,6 @@ endif()
 
 ###############################################################################
 
-# NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
     include/utils.cpp
@@ -117,10 +116,25 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     include/message/message.cpp
     include/exitstate/exitstate.cpp
     include/menustate/menustate.cpp
+    include/statemanager/statemanager.cpp
     include/utils_vault.cpp
     include/vault/vault.cpp
     include/vaultinteractionstate/vaultinteractionstate.cpp
     include/vaultselectionstate/vaultselectionstate.cpp
+
+    # Exception classes
+    include/exceptions/errorHandling.cpp
+    include/exceptions/enc_has_no_mac/enc_has_no_mac.cpp
+    include/exceptions/fail_enc_message/fail_enc_message.cpp
+    include/exceptions/fail_hash/fail_hash.cpp
+    include/exceptions/fail_hash_master/fail_hash_master.cpp
+    include/exceptions/failed_open_vault/failed_open_vault.cpp
+    include/exceptions/failed_open_vault_edit/failed_open_vault_edit.cpp
+    include/exceptions/item_value_invalid_enc/item_value_invalid_enc.cpp
+    include/exceptions/master_key_mismatch_exception/master_key_mismatch_exception.cpp
+    include/exceptions/sodium_init_failed/sodium_init_failed.cpp
+    include/exceptions/vault_invalid_json/vault_invalid_json.cpp
+    include/exceptions/vault_not_found_exception/vault_not_found_exception.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

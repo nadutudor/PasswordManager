@@ -2,11 +2,17 @@
 
 void Message::Encryption(const std::vector<unsigned char> &message, const std::vector<unsigned char> &hashed)
 {
-    if (sodium_init() < 0)
-    {
-        std::cerr << "Failed to initialize libsodium \n";
+    try{
+        if (sodium_init() < 0)
+        {
+            throw SodiumInitFailed();
+        }
+    }
+    catch(const SodiumInitFailed &e){
+        std::cerr<<e.what();
         return;
     }
+    
     // creating a temporary nonce
     std::vector<unsigned char> tempNonce(crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
     randombytes_buf(tempNonce.data(), tempNonce.size());
@@ -16,11 +22,18 @@ void Message::Encryption(const std::vector<unsigned char> &message, const std::v
 
     int result = crypto_aead_xchacha20poly1305_ietf_encrypt(tempEncrypted.data(), &encrypted_len, message.data(), message.size(),
                                                             NULL, 0, NULL, tempNonce.data(), hashed.data());
-    if (result)
-    {
-        std::cerr << "Failed to encrypt the message \n";
+
+    try {
+        if (result)
+        {
+            throw FailEncMessage();
+        }
+    }
+    catch(const FailEncMessage &e){
+        std::cerr<<e.what();
         return;
     }
+
     encrypted = tempEncrypted;
     nonce = tempNonce;
 }
@@ -36,15 +49,19 @@ Message::Message(const std::string &item_value)
 {
     std::vector<unsigned char> binary_item_value = Utils::Base64ToBin(item_value);
     // strict 24 bytes of nonce + 16 bytes MAC tag, considering that the message is 0 - worst case. Size at least 40 is a minimum requirement
-    if (binary_item_value.size() < 40)
-    {
-        std::cerr << "Item value is not correctly encrypted \n";
-        // to implement std::optional
+    try{
+        if (binary_item_value.size() < 40)
+        {
+            throw ItemValueInvalidEnc();
+        }
+        else
+        {
+            nonce.insert(nonce.begin(), binary_item_value.begin(), binary_item_value.begin() + 24);
+            encrypted.insert(encrypted.begin(), binary_item_value.begin() + 24, binary_item_value.end());
+        }
     }
-    else
-    {
-        nonce.insert(nonce.begin(), binary_item_value.begin(), binary_item_value.begin() + 24);
-        encrypted.insert(encrypted.begin(), binary_item_value.begin() + 24, binary_item_value.end());
+    catch(const ItemValueInvalidEnc &e){
+        std::cerr<<e.what();
     }
 }
 
@@ -57,15 +74,27 @@ std::ostream &operator<<(std::ostream &os, const Message &old_password)
 
 std::string Message::Decryption(const std::vector<unsigned char> &hashed) const
 {
-    if (sodium_init() < 0)
-    {
-        std::cerr << "Failed to initialize libsodium \n";
+    try{
+        if (sodium_init() < 0)
+        {
+            throw SodiumInitFailed();
+        }
+    }
+    catch(const SodiumInitFailed &e){
+        std::cerr<<e.what();
         return std::string();
     }
+
     // check if the encryption even has the MAC tag
-    if (encrypted.size() < crypto_aead_xchacha20poly1305_ietf_ABYTES)
-    {
-        std::cerr << "Encryption doesn't have MAC tag \n";
+    try{
+        if (encrypted.size() < crypto_aead_xchacha20poly1305_ietf_ABYTES)
+        {
+            throw EncHasNoMAC();
+            
+        }
+    }
+    catch(const EncHasNoMAC &e){
+        std::cerr<<e.what();
         return std::string();
     }
 
@@ -74,11 +103,19 @@ std::string Message::Decryption(const std::vector<unsigned char> &hashed) const
 
     int result = crypto_aead_xchacha20poly1305_ietf_decrypt(decrypted.data(), &decrypted_len, nullptr, encrypted.data(), encrypted.size(),
                                                             nullptr, 0, nonce.data(), hashed.data());
-    if (result)
-    {
-        std::cout << "Wrong master key. \n";
+
+    try{
+        if (result)
+        {
+            throw MasterKeyMismatchException();
+            
+        }
+    }
+    catch(const MasterKeyMismatchException &e){
+        std::cerr<<e.what();
         return std::string();
     }
+    
     return std::string(decrypted.begin(), decrypted.end());
 }
 

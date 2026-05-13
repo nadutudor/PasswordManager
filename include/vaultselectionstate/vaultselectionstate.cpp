@@ -1,6 +1,6 @@
 #include "vaultselectionstate.hpp"
 
-std::unique_ptr<MenuState> VaultSelectionState::handleInput() {
+std::unique_ptr<MenuState> VaultSelectionState::doHandleInput() {
     int choice;
     std::tuple<std::string, MasterKey> result;
     std::string path_of_vaults = std::filesystem::current_path().string();
@@ -27,4 +27,8 @@ std::unique_ptr<MenuState> VaultSelectionState::handleInput() {
     case 3:
         return std::make_unique<MainMenuState>();
     }
+}
+
+std::unique_ptr<MenuState> VaultSelectionState::clone() const {
+    return std::make_unique<VaultSelectionState>(*this);
 }

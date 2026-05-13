@@ -3,6 +3,11 @@
 #include <vector>
 #include <sodium.h>
 #include "utils.hpp"
+#include "../exceptions/enc_has_no_mac/enc_has_no_mac.hpp"
+#include "../exceptions/master_key_mismatch_exception/master_key_mismatch_exception.hpp"
+#include "../exceptions/sodium_init_failed/sodium_init_failed.hpp"
+#include "../exceptions/item_value_invalid_enc/item_value_invalid_enc.hpp"
+#include "../exceptions/fail_enc_message/fail_enc_message.hpp"
 
 class Message
 {

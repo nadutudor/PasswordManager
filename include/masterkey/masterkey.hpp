@@ -2,6 +2,8 @@
 #include <vector>
 #include <iostream>
 #include <sodium.h>
+#include "../exceptions/sodium_init_failed/sodium_init_failed.hpp"
+#include "../exceptions/fail_hash_master/fail_hash_master.hpp"
 
 class MasterKey
 {

@@ -11,23 +11,28 @@ void UtilsVault::find_vault(const std::unordered_map<std::filesystem::path, std:
         plain_master_key.push_back(t);
     }
     delete plain;
-
-    for (const auto &path : paths)
-    {
-        std::vector<unsigned char> hashed_master_key = Utils::Enc(plain_master_key, path.second[0]);
-        if (Utils::validate_master_key(hashed_master_key, path.second[1], path.second[2]))
+    try {
+        for (const auto &path : paths)
         {
-            std::cout << "  FILE FOUND:                             \n";
-            std::cout << "  Name of the matched file:                             \n";
-            std::cout << "  " << path.first.stem().string() << '\n';
+            std::vector<unsigned char> hashed_master_key = Utils::Enc(plain_master_key, path.second[0]);
+            if (Utils::validate_master_key(hashed_master_key, path.second[1], path.second[2]))
+            {
+                std::cout << "  FILE FOUND:                             \n";
+                std::cout << "  Name of the matched file:                             \n";
+                std::cout << "  " << path.first.stem().string() << '\n';
 
-            // zero the data in RAM, basically "erasing" the data
-            sodium_memzero(plain_master_key.data(), plain_master_key.size());
-            plain_master_key.clear();
-            return;
+                // zero the data in RAM, basically "erasing" the data
+                sodium_memzero(plain_master_key.data(), plain_master_key.size());
+                plain_master_key.clear();
+                return;
+            }
         }
+        throw VaultNotFoundException();
     }
-    std::cout << "  FILE NOT FOUND                             \n";
+    catch(const VaultNotFoundException &e) {
+        std::cerr<<e.what();
+    }
+    
     sodium_memzero(plain_master_key.data(), plain_master_key.size());
     plain_master_key.clear();
 }
@@ -52,9 +57,13 @@ std::tuple<std::string, MasterKey> UtilsVault::known_vault(const std::unordered_
     std::string full_path = path_of_vaults + file_name + ".json";
 
     // check if vault file exists with given name
-    if (paths.find(full_path) == paths.end())
-    {
-        std::cerr << "File not found \n";
+    try {
+        if (paths.find(full_path) == paths.end())
+            throw VaultNotFoundException();
+    }
+    catch(const VaultNotFoundException &e) {
+        std::cerr<<e.what();
+
         sodium_memzero(plain_master_key.data(), plain_master_key.size());
         plain_master_key.clear();
         return{"", MasterKey()};
@@ -65,10 +74,13 @@ std::tuple<std::string, MasterKey> UtilsVault::known_vault(const std::unordered_
     // zero the data in RAM, basically "erasing" the data
     sodium_memzero(plain_master_key.data(), plain_master_key.size());
     plain_master_key.clear();
+    try {
+        if(!Utils::validate_master_key(hashed_master_key, paths.at(full_path)[1], paths.at(full_path)[2]))
+            throw MasterKeyMismatchException();
+    }
+    catch(const MasterKeyMismatchException &e){
+        std::cerr<<e.what();
 
-    if (!Utils::validate_master_key(hashed_master_key, paths.at(full_path)[1], paths.at(full_path)[2]))
-    {
-        std::cerr << "Masterkey doesn't match \n";
         return{"", MasterKey()};
     }
 

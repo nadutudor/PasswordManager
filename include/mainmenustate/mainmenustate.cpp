@@ -1,6 +1,6 @@
 #include "mainmenustate.hpp"
 
-std::unique_ptr<MenuState> MainMenuState::handleInput() {
+std::unique_ptr<MenuState> MainMenuState::doHandleInput() {
     int choice;
 
     std::cout << "      Options:                                 \n";
@@ -11,7 +11,7 @@ std::unique_ptr<MenuState> MainMenuState::handleInput() {
     switch (choice)
     {
     case 1:
-        new Vault(); // sau Vault newVault() ? ;
+        new Vault();
         return nullptr;
     case 2:
         return std::make_unique<VaultSelectionState>();
@@ -21,4 +21,8 @@ std::unique_ptr<MenuState> MainMenuState::handleInput() {
         return std::make_unique<ExitState>();
     }
     return nullptr;
+}
+
+std::unique_ptr<MenuState> MainMenuState::clone() const {
+    return std::make_unique<MainMenuState>(*this);
 }

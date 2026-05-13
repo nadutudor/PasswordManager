@@ -1,12 +1,10 @@
 #pragma once
 #include <memory>
 #include <iostream>
-#include "../exitstate/exitstate.hpp"
 #include "../menustate/menustate.hpp"
-#include "../vaultselectionstate/vaultselectionstate.hpp"
-#include "../aboutstate/aboutstate.hpp"
+#include "../mainmenustate/mainmenustate.hpp"
 
-class MainMenuState : public MenuState {
+class AboutState : public MenuState {
 public:
     std::unique_ptr<MenuState> doHandleInput() override;
     std::unique_ptr<MenuState> clone() const override;

@@ -121,6 +121,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     include/vault/vault.cpp
     include/vaultinteractionstate/vaultinteractionstate.cpp
     include/vaultselectionstate/vaultselectionstate.cpp
+    include/aboutstate/aboutstate.cpp
 
     # Exception classes
     include/exceptions/errorHandling.cpp

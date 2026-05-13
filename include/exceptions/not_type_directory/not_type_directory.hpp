@@ -5,6 +5,6 @@
 class NotTypeDirectory : public std::exception {
     std::string message;
 public:
-    explicit NotTypeDirectory(const std::string parent_directory);
+    explicit NotTypeDirectory(const std::string& parent_directory);
     virtual const char* what() const noexcept override;
 };

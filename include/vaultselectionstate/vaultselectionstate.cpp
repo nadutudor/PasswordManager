@@ -27,6 +27,7 @@ std::unique_ptr<MenuState> VaultSelectionState::doHandleInput() {
     case 3:
         return std::make_unique<MainMenuState>();
     }
+    return nullptr;
 }
 
 std::unique_ptr<MenuState> VaultSelectionState::clone() const {

@@ -26,6 +26,7 @@ std::unique_ptr<MenuState> VaultInteractionState::doHandleInput() {
 }
 
 std::unique_ptr<MenuState> VaultInteractionState::clone() const {
-    return std::make_unique<VaultInteractionState>(*this);
+    auto clone = std::make_unique<VaultInteractionState>(*this);
+    return clone;
 }
 

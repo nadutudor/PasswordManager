@@ -106,6 +106,21 @@ endif()
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
+    include/utils.cpp
+    include/category/category.cpp
+    include/files/files.cpp
+    include/folder/folder.cpp
+    include/login/login.cpp
+    include/logincredentials/logincredentials.cpp
+    include/mainmenustate/mainmenustate.cpp
+    include/masterkey/masterkey.cpp
+    include/message/message.cpp
+    include/exitstate/exitstate.cpp
+    include/menustate/menustate.cpp
+    include/utils_vault.cpp
+    include/vault/vault.cpp
+    include/vaultinteractionstate/vaultinteractionstate.cpp
+    include/vaultselectionstate/vaultselectionstate.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

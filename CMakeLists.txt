@@ -131,6 +131,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     include/exceptions/failed_open_vault/failed_open_vault.cpp
     include/exceptions/failed_open_vault_edit/failed_open_vault_edit.cpp
     include/exceptions/item_value_invalid_enc/item_value_invalid_enc.cpp
+    include/exceptions/directory_not_exist/directory_not_exist.cpp
+    include/exceptions/not_type_directory/not_type_directory.cpp
     include/exceptions/master_key_mismatch_exception/master_key_mismatch_exception.cpp
     include/exceptions/sodium_init_failed/sodium_init_failed.cpp
     include/exceptions/vault_invalid_json/vault_invalid_json.cpp

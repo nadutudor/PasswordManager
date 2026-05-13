@@ -7,6 +7,6 @@ protected:
     std::string message;
 public:
     FailedOpenVault();
-    FailedOpenVault(const std::string &existing_vault);
+    explicit FailedOpenVault(const std::string &existing_vault);
     virtual const char* what() const noexcept override;
 };

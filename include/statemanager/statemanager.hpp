@@ -6,7 +6,7 @@
 class StateManager {
     std::unique_ptr<MenuState> currentState;
 public:
-    StateManager(std::unique_ptr<MenuState> currentState);
+    explicit StateManager(std::unique_ptr<MenuState> currentState);
     void run();
     StateManager &operator=(const StateManager &app);
 };

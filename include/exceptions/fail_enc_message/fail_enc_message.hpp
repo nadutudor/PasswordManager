@@ -1,6 +1,6 @@
 #pragma once
-#include "string"
-#include "exception"
+#include <string>
+#include <exception>
 
 class FailEncMessage : public std::exception {
     std::string message;

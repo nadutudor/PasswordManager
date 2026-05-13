@@ -11,8 +11,9 @@ std::unique_ptr<MenuState> AboutState::doHandleInput() {
     {
     case 1:
         return std::make_unique<MainMenuState>();
-    return nullptr;
     }
+    return nullptr;
+    
 }
 
 std::unique_ptr<MenuState> AboutState::clone() const {

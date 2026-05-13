@@ -6,6 +6,10 @@
 #include "../vaultselectionstate/vaultselectionstate.hpp"
 #include "../aboutstate/aboutstate.hpp"
 
+/*
+    initial state; the only state from where the program has a transition to exitState.
+*/
+
 class MainMenuState : public MenuState {
 public:
     std::unique_ptr<MenuState> doHandleInput() override;

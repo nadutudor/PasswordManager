@@ -5,6 +5,10 @@
 #include "../menustate/menustate.hpp"
 #include "../vaultselectionstate/vaultselectionstate.hpp"
 
+/*
+    the state that allows the user to interact with a single vault.
+*/
+
 class VaultInteractionState : public MenuState{
     std::filesystem::path path_to_vault;
     Vault vault;

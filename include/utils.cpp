@@ -1,4 +1,10 @@
-// TODO: Rewrite validate master key function
+/*
+    Utilitary tools, used all over the project.
+    BinToBase64() and Base64ToBin are crucial in parsing the data from and to the json files. Used so that the output in the json file is human readable
+    Enc() is used to hash master keys or any other string using Argon2 hashing algorithm
+    validate_master_key() checks if a master key matches the vault. It uses a dummy field and a MAC tag (which is inside the dummy field data). 
+    The encryption algorithm is XChaCha20 
+*/
 #include "utils.hpp"
 
 

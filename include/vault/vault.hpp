@@ -17,13 +17,11 @@
 
 using json = nlohmann::json;
 
-
 class Vault
 {
     std::vector<Login> items;
     std::filesystem::path path_to_vault;
     MasterKey masterkey;
-    // TODO: Add path of the file that contains data for vault to reduce redudancy
 public:
     // Create Vault 
     Vault();

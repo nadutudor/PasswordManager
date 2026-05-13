@@ -1,3 +1,8 @@
+/*
+    find_vault() is an extension to VaultInteractionState object. Used to check all the vaults and return the path of the ones that match the master key inserted by the user.
+    known_vault() checks if the vault with the name inserted by the user exists and then using the function validate_master_key() checks if the master key is correct.
+*/
+
 #include "utils_vault.hpp"
 
 void UtilsVault::find_vault(const std::unordered_map<std::filesystem::path, std::array<std::vector<unsigned char>, 3>> &paths)

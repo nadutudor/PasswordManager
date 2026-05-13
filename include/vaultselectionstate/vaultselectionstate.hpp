@@ -12,6 +12,10 @@
 #include "../menustate/menustate.hpp"
 #include "../mainmenustate/mainmenustate.hpp"
 
+/*
+    the state which allows the user to search for vaults. 
+*/
+
 class VaultSelectionState : public MenuState {
 public:
     std::unique_ptr<MenuState> doHandleInput() override;

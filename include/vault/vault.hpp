@@ -22,6 +22,8 @@ class Vault
     std::vector<Login> items;
     std::filesystem::path path_to_vault;
     MasterKey masterkey;
+    static int nextId;
+    int vaultId;
 public:
     // Create Vault 
     Vault();

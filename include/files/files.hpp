@@ -12,16 +12,17 @@
 #include "../exceptions/not_type_directory/not_type_directory.hpp"
 #include "../exceptions/failed_open_vault/failed_open_vault.hpp"
 #include "../exceptions/vault_invalid_json/vault_invalid_json.hpp"
+#include "../vaultindex/vaultindex.hpp"
 
 using json = nlohmann::json;
-
+using VaultMetadata = std::array<std::vector<unsigned char>, 3>;
 
 class Files
 {
-    std::unordered_map<std::filesystem::path, std::array<std::vector<unsigned char>, 3>> paths;
+    VaultIndex<std::filesystem::path, VaultMetadata> paths;
 
 public:
     explicit Files(const std::filesystem::path &parent_directory);
     friend std::ostream &operator<<(std::ostream &os, const Files &old_files);
-    const std::unordered_map<std::filesystem::path, std::array<std::vector<unsigned char>, 3>> &getPaths() const;
+    const VaultIndex<std::filesystem::path, VaultMetadata> &getPaths() const;
 };

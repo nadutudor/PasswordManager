@@ -62,27 +62,28 @@ Files::Files(const std::filesystem::path &parent_directory)
             continue;
         }
         std::string salt_b64 = vault["salt"];
-        std::vector<unsigned char> dummy_bin_container = Utils::Base64ToBin(vault["dummy"]);
+        std::string dummy_b64 = vault["dummy"];
+        std::vector<unsigned char> dummy_bin_container = Utils::Base64ToBin(dummy_b64);
         std::vector<unsigned char> dummy_bin;
         dummy_bin.insert(dummy_bin.begin(), dummy_bin_container.begin() + 24, dummy_bin_container.end());
         std::vector<unsigned char> dummy_nonce_bin;
         dummy_nonce_bin.insert(dummy_nonce_bin.begin(), dummy_bin_container.begin(), dummy_bin_container.begin() + 24);
-        paths[file.path()][0] = Utils::Base64ToBin(salt_b64);
-        paths[file.path()][1] = dummy_bin;
-        paths[file.path()][2] = dummy_nonce_bin;
+        paths.getPaths()[file.path()][0] = Utils::Base64ToBin(salt_b64);
+        paths.getPaths()[file.path()][1] = dummy_bin;
+        paths.getPaths()[file.path()][2] = dummy_nonce_bin;
     }
 }
 
 std::ostream &operator<<(std::ostream &os, const Files &old_files)
 {
-    for (auto const &key : old_files.paths)
+    for (auto const &key : old_files.paths.getPaths())
     {
         os << key.first.string() << '\n';
     }
     return os;
 }
 
-const std::unordered_map<std::filesystem::path, std::array<std::vector<unsigned char>, 3>>& Files::getPaths() const
+const VaultIndex<std::filesystem::path, VaultMetadata>& Files::getPaths() const
 {
     return paths;
 }

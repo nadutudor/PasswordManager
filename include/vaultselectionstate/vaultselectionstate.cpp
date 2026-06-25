@@ -7,7 +7,8 @@ std::unique_ptr<MenuState> VaultSelectionState::doHandleInput() {
     // Path can be changed at any time
     path_of_vaults.append("/assets/vaults/");
     Files file(path_of_vaults);
-    std::unordered_map<std::filesystem::path, std::array<std::vector<unsigned char>, 3>> paths = file.getPaths();
+    const auto& paths_vault_index = file.getPaths();
+    const std::unordered_map<std::filesystem::path, std::array<std::vector<unsigned char>, 3>>& paths = paths_vault_index.getPaths();
     
     std::cout << "      Options:                                 \n";
     std::cout << "  [1] Find vault                             \n";

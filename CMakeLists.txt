@@ -105,11 +105,11 @@ endif()
 
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
-    include/utils.cpp
     include/category/category.cpp
     include/files/files.cpp
     include/folder/folder.cpp
     include/login/login.cpp
+    include/login/loginbuilder.cpp
     include/logincredentials/logincredentials.cpp
     include/mainmenustate/mainmenustate.cpp
     include/masterkey/masterkey.cpp
@@ -138,6 +138,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     include/exceptions/sodium_init_failed/sodium_init_failed.cpp
     include/exceptions/vault_invalid_json/vault_invalid_json.cpp
     include/exceptions/vault_not_found_exception/vault_not_found_exception.cpp
+    include/unit/unit.hpp
+    include/vaultindex/vaultindex.hpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

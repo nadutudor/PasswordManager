@@ -1,17 +1,12 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include "../unit/unit.hpp"
 
-class Category
-{
-    std::string name;
+struct CategoryTag{};
 
+class Category : public Unit<CategoryTag>{
 public:
+    Category(const std::string &s);
     Category();
-    explicit Category(const std::string &name);
-    explicit Category(const Category &old_category);
-    void operator=(const Category &old_category);
-    ~Category();
-    friend std::ostream &operator<<(std::ostream &os, const Category &old_category);
-    bool operator<(const Category &old_category);
 };

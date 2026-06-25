@@ -1,5 +1,6 @@
 #include "vault.hpp"
 
+int Vault::nextId = 0;
 
 // For an already existing vault
 Vault::Vault(const std::filesystem::path &existing_vault, const MasterKey &masterkey) : masterkey{masterkey}
@@ -32,7 +33,7 @@ Vault::Vault(const std::filesystem::path &existing_vault, const MasterKey &maste
     {
         std::string name = Message(it.at("name").get<std::string>()).Decryption(this->masterkey.getHash());
         Category category(Message(it.at("category").get<std::string>()).Decryption(this->masterkey.getHash()));
-        Folder folder(Message(it.at("folder").get<std::string>()).Decryption(this->masterkey.getHash()));
+        Folder folder = Folder(Message(it.at("folder").get<std::string>()).Decryption(this->masterkey.getHash()));
         LoginCredentials loginInfo(Message(it.at("login").at("username").get<std::string>()).Decryption(this->masterkey.getHash()),
                                     Message(it.at("login").at("password").get<std::string>()));
         std::string link = Message(it.at("link").get<std::string>()).Decryption(this->masterkey.getHash());
@@ -43,6 +44,7 @@ Vault::Vault(const std::filesystem::path &existing_vault, const MasterKey &maste
 
     fin.close();
     path_to_vault = existing_vault;
+    vaultId = nextId++;
 }
 
 // Create Vault
@@ -86,6 +88,7 @@ Vault::Vault()
     fout << newVault.dump(4);
     fout.close();
     path_to_vault = path_of_vaults / (vaultName + ".json");
+    vaultId = nextId++;
 }
 
 // cppcheck-suppress unusedFunction

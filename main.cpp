@@ -304,6 +304,10 @@
 
 int main()
 {
+    /*
+        StateManager used to follow the logic of State Design Pattern, where each transition represents a new state. All states are implemented with unique pointers,
+        so that there can't be two or more identical states while the application is running.
+    */
     StateManager app(std::make_unique<MainMenuState>());
     app.run();
     

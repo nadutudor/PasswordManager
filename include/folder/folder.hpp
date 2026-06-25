@@ -1,17 +1,12 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include "../unit/unit.hpp"
 
-class Folder
-{
-    std::string name;
+struct FolderTag{};
 
+class Folder : public Unit<FolderTag>{
 public:
+    Folder(const std::string &s);
     Folder();
-    explicit Folder(const std::string &name);
-    explicit Folder(const Folder &old_category);
-    void operator=(const Folder &old_category);
-    ~Folder();
-    friend std::ostream &operator<<(std::ostream &os, const Folder &old_category);
-    bool operator<(const Folder &old_folder);
 };

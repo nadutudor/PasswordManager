@@ -38,8 +38,14 @@ Vault::Vault(const std::filesystem::path &existing_vault, const MasterKey &maste
                                     Message(it.at("login").at("password").get<std::string>()));
         std::string link = Message(it.at("link").get<std::string>()).Decryption(this->masterkey.getHash());
         std::string notes = Message(it.at("notes").get<std::string>()).Decryption(this->masterkey.getHash());
-        Login item(name, category, folder, loginInfo, link, notes);
-        items.push_back(item);
+        items.push_back(LoginBuilder()
+        .setItemName(name)
+        .setCategory(category)
+        .setFolder(folder)
+        .setLoginInfo(loginInfo)
+        .setLink(link)
+        .setNotes(notes)
+        .build());
     }
 
     fin.close();

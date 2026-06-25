@@ -4,7 +4,6 @@
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "../login/login.hpp"
 #include "../masterkey/masterkey.hpp"
 #include "../category/category.hpp"
 #include "../utils.hpp"
@@ -14,6 +13,7 @@
 #include "../exceptions/failed_open_vault/failed_open_vault.hpp"
 #include "../exceptions/failed_open_vault_edit/failed_open_vault_edit.hpp"
 #include "../exceptions/vault_invalid_json/vault_invalid_json.hpp"
+#include "../login/loginbuilder.hpp"
 
 using json = nlohmann::json;
 

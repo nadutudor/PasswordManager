@@ -7,6 +7,6 @@ struct CategoryTag{};
 
 class Category : public Unit<CategoryTag>{
 public:
-    Category(const std::string &s);
+    explicit Category(const std::string &s);
     Category();
 };

@@ -7,6 +7,6 @@ struct FolderTag{};
 
 class Folder : public Unit<FolderTag>{
 public:
-    Folder(const std::string &s);
+    explicit Folder(const std::string &s);
     Folder();
 };
